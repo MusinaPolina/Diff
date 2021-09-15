@@ -4,8 +4,11 @@
 */
 
 class Text {
-    val text: List<String> = listOf()
+    var text: List<String> = listOf()
     constructor() {
         TODO("input parsing")
+    }
+    constructor(input: List<String>) {
+        text = input
     }
 }
