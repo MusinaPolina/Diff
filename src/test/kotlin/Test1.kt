@@ -3,25 +3,79 @@ import kotlin.test.*
 internal class Test1 {
 
     @Test
-    fun testValueCountLongestCommonSubsequence() {
-        var text1 = Text(listOf("this\n", "is\n", "original\n", "text\n"))
-        var text2 = Text(listOf("this\n", "is\n", "new\n", "text\n"))
-        var result = countLongestCommonSubsequence(text1, text2)
-        assertEquals(3, result[text1.text.size][text2.text.size].value)
+    fun testLCS1() {
+        val text1 = Text(listOf("this\n", "is\n", "original\n", "text\n"))
+        val text2 = Text(listOf("this\n", "is\n", "new\n", "text\n"))
+        val result = countLongestCommonSubsequence(text1, text2)
+        assertEquals(3, result[text1.text.size][text2.text.size].value) //test of numerical value of the LCS
+        val answer: List<List<DiffLine>> = listOf(
+            listOf(DiffLine(LineType.Common, 0, 0),
+                DiffLine(LineType.Common, 1, 1),
+                DiffLine(LineType.Common, 3, 3)),
+            listOf(DiffLine(LineType.Add, 2, 2)),
+            listOf(DiffLine(LineType.Delete, 2, 2)))
+        compareAnswerLCS(answer, buildDiffText(text1, text2, result))
+    }
 
-        text1 = Text(listOf("this\n", "is\n", "original\n", "text\n"))
-        text2 = Text(listOf("this\n", "text\n"))
-        result = countLongestCommonSubsequence(text1, text2)
-        assertEquals(2, result[text1.text.size][text2.text.size].value)
+    @Test
+    fun testLCS2() {
+        val text1 = Text(listOf("this\n", "is\n", "original\n", "text\n"))
+        val text2 = Text(listOf("this\n", "text\n"))
+        val result = countLongestCommonSubsequence(text1, text2)
+        assertEquals(2, result[text1.text.size][text2.text.size].value) //test of numerical value of the LCS
+        val answer: List<List<DiffLine>> = listOf(
+            listOf(DiffLine(LineType.Common, 0, 0),
+                DiffLine(LineType.Common, 3, 1)),
+            listOf(),
+            listOf(DiffLine(LineType.Delete, 1, 1),
+                DiffLine(LineType.Delete, 2, 2)))
+        compareAnswerLCS(answer, buildDiffText(text1, text2, result))
+    }
 
-        text1 = Text(listOf("this\n", "is\n", "original\n", "text\n"))
-        text2 = Text(listOf("now\n", "it's\n", "completely\n", "new\n", "one"))
-        result = countLongestCommonSubsequence(text1, text2)
-        assertEquals(0, result[text1.text.size][text2.text.size].value)
+    @Test
+    fun testLCS3() {
+        val text1 = Text(listOf("this\n", "is\n", "original\n", "text\n"))
+        val text2 = Text(listOf("now\n", "it's\n", "completely\n", "new\n", "one"))
+        val result = countLongestCommonSubsequence(text1, text2)
+        assertEquals(0, result[text1.text.size][text2.text.size].value) //test of numerical value of the LCS
+        val answer: List<List<DiffLine>> = listOf(
+            listOf(),
+            listOf(DiffLine(LineType.Add, 0, 0),
+                DiffLine(LineType.Add, 1, 1),
+                DiffLine(LineType.Add, 2, 2),
+                DiffLine(LineType.Add, 3, 3),
+                DiffLine(LineType.Add, 4, 4)),
+            listOf(DiffLine(LineType.Delete, 0, 0),
+                DiffLine(LineType.Delete, 1, 1),
+                DiffLine(LineType.Delete, 2, 2),
+                DiffLine(LineType.Delete, 3, 3)))
+        compareAnswerLCS(answer, buildDiffText(text1, text2, result))
+    }
 
-        text1 = Text(listOf("aaa\n", "bvv\n", "att\n", "byy\n"))
-        text2 = Text(listOf("aaa\n", "bvv\n", "byy\n", "att\n"))
-        result = countLongestCommonSubsequence(text1, text2)
+    private fun buildListDiffLines(result: List<DiffLine>): List<List<DiffLine>>{
+        val list: MutableList<MutableList<DiffLine>> =
+            mutableListOf(mutableListOf(), mutableListOf(), mutableListOf())
+        for (it in result) {
+            when (it.type) {
+                LineType.Common -> list[0].add(it)
+                LineType.Add -> list[1].add(it)
+                else -> list[2].add(it)
+            }
+        }
+        return list
+    }
+
+    private fun compareAnswerLCS(answer: List<List<DiffLine>>, result: MutableList<DiffLine>) {
+        val current = buildListDiffLines(result)
+        assertEquals(answer, current)
+
+    }
+
+    @Test
+    fun testLCS4() {
+        val text1 = Text(listOf("aaa\n", "bvv\n", "att\n", "byy\n"))
+        val text2 = Text(listOf("aaa\n", "bvv\n", "byy\n", "att\n"))
+        val result = countLongestCommonSubsequence(text1, text2)
         assertEquals(3, result[text1.text.size][text2.text.size].value)
     }
 }
