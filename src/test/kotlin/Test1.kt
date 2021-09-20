@@ -4,8 +4,8 @@ internal class Test1 {
 
     @Test
     fun testLCS1() {
-        val text1 = Text(listOf("this\n", "is\n", "original\n", "text\n"))
-        val text2 = Text(listOf("this\n", "is\n", "new\n", "text\n"))
+        val text1 = Text(listOf("this\n", "is\n", "original", "text\n"))
+        val text2 = Text(listOf("this\n", "is\n", "new", "text\n"))
         val result = countLongestCommonSubsequence(text1, text2)
         assertEquals(3, result[text1.text.size][text2.text.size].value) //test of numerical value of the LCS
         val answer: List<List<DiffLine>> = listOf(
@@ -15,12 +15,14 @@ internal class Test1 {
             listOf(DiffLine(LineType.Add, 2, 2)),
             listOf(DiffLine(LineType.Delete, 2, 1)))
         compareAnswerLCS(answer, buildDiffText(text1, text2, result))
+        val diff = Diff(text1, text2)
+        assertEquals("3c3\n< original\n---\n> new\n", diff.printDefault())
     }
 
     @Test
     fun testLCS2() {
-        val text1 = Text(listOf("this\n", "is\n", "original\n", "text\n"))
-        val text2 = Text(listOf("this\n", "text\n"))
+        val text1 = Text(listOf("this", "is", "original", "text"))
+        val text2 = Text(listOf("this", "text"))
         val result = countLongestCommonSubsequence(text1, text2)
         assertEquals(2, result[text1.text.size][text2.text.size].value) //test of numerical value of the LCS
         val answer: List<List<DiffLine>> = listOf(
@@ -30,6 +32,8 @@ internal class Test1 {
             listOf(DiffLine(LineType.Delete, 1, 0),
                 DiffLine(LineType.Delete, 2, 0)))
         compareAnswerLCS(answer, buildDiffText(text1, text2, result))
+        val diff = Diff(text1, text2)
+        assertEquals("2,3d1\n< is\n< original\n", diff.printDefault())
     }
 
     @Test
@@ -68,7 +72,6 @@ internal class Test1 {
     private fun compareAnswerLCS(answer: List<List<DiffLine>>, result: MutableList<DiffLine>) {
         val current = buildListDiffLines(result)
         assertEquals(answer, current)
-
     }
 
     @Test
