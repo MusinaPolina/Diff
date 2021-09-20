@@ -5,8 +5,7 @@ enum class LineType(val value: Char){
 /*  Category of line in text: it has been added, deleted or remained the same
     and its index in both texts (-1 in case it's absent) */
 
-data class DiffLine(val type: LineType, val firstIndex: Int = -1, val secondIndex: Int = -1)
-
+data class DiffLine(var type: LineType, var firstIndex: Int = -1, var secondIndex: Int = -1)
 
 /* Values and previous position of state of dp to count the longest common subsequence */
 
@@ -14,11 +13,10 @@ data class DPValue(val value: Int = 0, val previous: Pair<Int, Int> = Pair(0, 0)
 
 /* Function calculates an array of dp for LongestCommonSubsequence*/
 
-fun countLongestCommonSubsequence(firstText: Text, secondText: Text): Array<Array<DPValue>> {
+fun countLongestCommonSubsequence(firstText: Text, secondText: Text): List<List<DPValue>> {
     val firstSize = firstText.text.size
     val secondSize = secondText.text.size
-    val dp: Array<Array<DPValue>> = Array(firstSize + 1) { Array(secondSize + 1) { DPValue() } }
-
+    val dp: List<MutableList<DPValue>> = List(firstSize + 1) { MutableList(secondSize + 1) { DPValue() } }
     val firstRange = 1..firstSize
     val secondRange = 1..secondSize
 
@@ -42,11 +40,11 @@ fun countLongestCommonSubsequence(firstText: Text, secondText: Text): Array<Arra
 
 fun addLines(dText: MutableList<DiffLine>, from: Int, to: Int, type: LineType) {
     for (i in from downTo to) {
-        dText.add(DiffLine(type, i, i))
+        dText.add(DiffLine(type))
     }
 }
 
-fun buildDiffText(firstText: Text, secondText: Text, dp: Array<Array<DPValue>>): MutableList<DiffLine> {
+fun buildDiffText(firstText: Text, secondText: Text, dp: List<List<DPValue>>): MutableList<DiffLine> {
     val dText: MutableList<DiffLine> = mutableListOf()
     var indexes = Pair(firstText.text.size, secondText.text.size)
     do {
@@ -55,7 +53,7 @@ fun buildDiffText(firstText: Text, secondText: Text, dp: Array<Array<DPValue>>):
         first -= 1
         second -= 1
         if (first != -1 && second != -1 && firstText.text[first] == secondText.text[second]) {
-            dText.add(DiffLine(LineType.Common, first, second))
+            dText.add(DiffLine(LineType.Common))
         } else {
             addLines(dText, second, previous.second, LineType.Add)
             addLines(dText, first, previous.first, LineType.Delete)
@@ -63,15 +61,89 @@ fun buildDiffText(firstText: Text, secondText: Text, dp: Array<Array<DPValue>>):
         indexes = previous
     } while (indexes != Pair(0, 0)) //(0, 0) base of dp
     dText.reverse()
+    sortDiffLines(dText)
+    buildIndexes(dText)
     return dText
 }
 
-class Diff {
-    val dText: MutableList<DiffLine> = mutableListOf()
-    val firstText = Text()
-    val secondText = Text()
+fun sortDiffLines(dText: MutableList<DiffLine>) {
+    val sortDText: MutableList<DiffLine> = mutableListOf()
+    val added: MutableList<DiffLine> = mutableListOf()
+    val deleted: MutableList<DiffLine> = mutableListOf()
+    for (i in 0 until dText.size) {
+        if (dText[i].type == LineType.Common) {
+            updateSortDText(sortDText, deleted)
+            updateSortDText(sortDText, added)
+            sortDText.add(dText[i])
+            continue
+        }
+        when (dText[i].type) {
+            LineType.Add -> added.add(dText[i])
+            else -> deleted.add(dText[i])
+        }
+    }
+    updateSortDText(sortDText, deleted)
+    updateSortDText(sortDText, added)
+    for (i in 0 until sortDText.size) {
+        dText[i] = sortDText[i]
+    }
+}
 
-    fun longestCommonSubsequence() {
-        //val dp = countLongestCommonSubsequence(firstText, secondText)
+fun updateSortDText(sortDText: MutableList<DiffLine>, updated: MutableList<DiffLine>) {
+    updated.forEach {
+        sortDText.add(it)
+    }
+    updated.clear()
+}
+
+fun buildIndexes(dText: MutableList<DiffLine>) {
+    var firstIndex = -1
+    var secondIndex = -1
+    for (i in 0 until dText.size) {
+        val line = dText[i]
+        when (line.type) {
+            LineType.Delete -> firstIndex += 1
+            LineType.Add -> secondIndex += 1
+            else -> {
+                firstIndex += 1
+                secondIndex += 1
+            }
+        }
+        dText[i].firstIndex = firstIndex
+        dText[i].secondIndex = secondIndex
+    }
+}
+
+class Diff(text1: Text, text2: Text) {
+    var dText: List<DiffLine> = listOf()
+    var firstText: Text = text1
+    var secondText: Text = text2
+
+    init {
+        longestCommonSubsequence()
+    }
+
+    private fun longestCommonSubsequence() {
+        dText = buildDiffText(firstText, secondText, countLongestCommonSubsequence(firstText, secondText))
+    }
+
+    fun printu() {
+        println("@@ -1,${firstText.text.size} +1,${secondText.text.size} @@")
+        dText.forEach {
+            when (it.type) {
+                LineType.Add -> {
+                    print("+ ")
+                    println(secondText.text[it.secondIndex])
+                }
+                LineType.Delete -> {
+                    print("- ")
+                    println(firstText.text[it.firstIndex])
+                }
+                else -> {
+                    print("  ")
+                    println(firstText.text[it.firstIndex])
+                }
+            }
+        }
     }
 }

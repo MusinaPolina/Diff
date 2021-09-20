@@ -13,7 +13,7 @@ internal class Test1 {
                 DiffLine(LineType.Common, 1, 1),
                 DiffLine(LineType.Common, 3, 3)),
             listOf(DiffLine(LineType.Add, 2, 2)),
-            listOf(DiffLine(LineType.Delete, 2, 2)))
+            listOf(DiffLine(LineType.Delete, 2, 1)))
         compareAnswerLCS(answer, buildDiffText(text1, text2, result))
     }
 
@@ -27,8 +27,8 @@ internal class Test1 {
             listOf(DiffLine(LineType.Common, 0, 0),
                 DiffLine(LineType.Common, 3, 1)),
             listOf(),
-            listOf(DiffLine(LineType.Delete, 1, 1),
-                DiffLine(LineType.Delete, 2, 2)))
+            listOf(DiffLine(LineType.Delete, 1, 0),
+                DiffLine(LineType.Delete, 2, 0)))
         compareAnswerLCS(answer, buildDiffText(text1, text2, result))
     }
 
@@ -40,15 +40,15 @@ internal class Test1 {
         assertEquals(0, result[text1.text.size][text2.text.size].value) //test of numerical value of the LCS
         val answer: List<List<DiffLine>> = listOf(
             listOf(),
-            listOf(DiffLine(LineType.Add, 0, 0),
-                DiffLine(LineType.Add, 1, 1),
-                DiffLine(LineType.Add, 2, 2),
+            listOf(DiffLine(LineType.Add, 3, 0),
+                DiffLine(LineType.Add, 3, 1),
+                DiffLine(LineType.Add, 3, 2),
                 DiffLine(LineType.Add, 3, 3),
-                DiffLine(LineType.Add, 4, 4)),
-            listOf(DiffLine(LineType.Delete, 0, 0),
-                DiffLine(LineType.Delete, 1, 1),
-                DiffLine(LineType.Delete, 2, 2),
-                DiffLine(LineType.Delete, 3, 3)))
+                DiffLine(LineType.Add, 3, 4)),
+            listOf(DiffLine(LineType.Delete, 0, -1),
+                DiffLine(LineType.Delete, 1, -1),
+                DiffLine(LineType.Delete, 2, -1),
+                DiffLine(LineType.Delete, 3, -1)))
         compareAnswerLCS(answer, buildDiffText(text1, text2, result))
     }
 
