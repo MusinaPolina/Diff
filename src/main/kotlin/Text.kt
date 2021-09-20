@@ -10,8 +10,8 @@ class Text {
     constructor() {
 
     }
-    constructor(path: String) {
-        text = File(path).readLines()
+    constructor(file: File) {
+        text = file.readLines()
     }
     constructor(input: List<String>) {
         text = input
