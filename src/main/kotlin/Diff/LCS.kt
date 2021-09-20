@@ -1,14 +1,3 @@
-enum class LineType(val value: Char){
-    Add('a'), Delete('d'), Common('c')
-}
-
-/*  Category of line in text: it has been added, deleted or remained the same
-    and its index in both texts (-1 in case it's absent) */
-
-data class DiffLine(var type: LineType, var firstIndex: Int = -1, var secondIndex: Int = -1)
-
-/* Values and previous position of state of dp to count the longest common subsequence */
-
 data class DPValue(val value: Int = 0, val previous: Pair<Int, Int> = Pair(0, 0))
 
 /* Function calculates an array of dp for LongestCommonSubsequence*/
@@ -111,39 +100,5 @@ fun buildIndexes(dText: MutableList<DiffLine>) {
         }
         dText[i].firstIndex = firstIndex
         dText[i].secondIndex = secondIndex
-    }
-}
-
-class Diff(text1: Text, text2: Text) {
-    var dText: List<DiffLine> = listOf()
-    var firstText: Text = text1
-    var secondText: Text = text2
-
-    init {
-        longestCommonSubsequence()
-    }
-
-    private fun longestCommonSubsequence() {
-        dText = buildDiffText(firstText, secondText, countLongestCommonSubsequence(firstText, secondText))
-    }
-
-    fun printu() {
-        println("@@ -1,${firstText.text.size} +1,${secondText.text.size} @@")
-        dText.forEach {
-            when (it.type) {
-                LineType.Add -> {
-                    print("+ ")
-                    println(secondText.text[it.secondIndex])
-                }
-                LineType.Delete -> {
-                    print("- ")
-                    println(firstText.text[it.firstIndex])
-                }
-                else -> {
-                    print("  ")
-                    println(firstText.text[it.firstIndex])
-                }
-            }
-        }
     }
 }
