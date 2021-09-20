@@ -24,4 +24,8 @@ class Diff(text1: Text, text2: Text) {
     fun printDefault(): String {
         return printDefault(this).toString()
     }
+
+    fun printUnified(border: Int = 3): String {
+        return printUnified(this, border)
+    }
 }

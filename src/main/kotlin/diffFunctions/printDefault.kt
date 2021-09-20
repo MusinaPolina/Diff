@@ -13,7 +13,7 @@ private fun linesIndexes(first : Int, last : Int): String {
 /* Return a line that contains a description of a given block:
 *  number of lines (in both files) that were changed and type */
 
-private fun descriptionLine(deleted: List<DiffLine>, added: List<DiffLine>, plus: LineType): StringBuilder {
+fun descriptionLine(deleted: List<DiffLine>, added: List<DiffLine>, plus: LineType): StringBuilder {
     val result = StringBuilder()
     result.append(linesIndexes(deleted[0].firstIndex, deleted[deleted.lastIndex].firstIndex))
     result.append(plus.value)
@@ -88,12 +88,13 @@ fun printDefault(text: Diff): StringBuilder {
     val block: MutableList<DiffLine> = mutableListOf()  /* Contains added and deleted lines that should be printed
                                                             Changed lines are separated by common ones*/
     for (i in 0 until text.dText.size) {
-        if (text.dText[i].type == LineType.Common) {
-            result.append(printDefaultBlock(block, text.texts))
-            block.clear()
-            continue
+        when (text.dText[i].type) {
+            LineType.Common -> {
+                result.append(printDefaultBlock(block, text.texts))
+                block.clear()
+            }
+            else -> block.add(text.dText[i])
         }
-        block.add(text.dText[i])
     }
     result.append(printDefaultBlock(block, text.texts))
     return result

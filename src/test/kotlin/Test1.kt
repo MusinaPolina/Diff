@@ -81,4 +81,13 @@ internal class Test1 {
         val result = countLongestCommonSubsequence(text1, text2)
         assertEquals(3, result[text1.text.size][text2.text.size].value)
     }
+
+    @Test
+    fun testLCS5() {
+        val text1 = Text(listOf("this", "is", "new", "original", "text"))
+        val text2 = Text(listOf("this", "is", "test", "not", "TEXT"))
+        val diff = Diff(text1, text2)
+        assertEquals("@@ -1,5 +1,5 @@\n  this\n  is\n- new\n- original\n- text\n+ test\n+ not\n+ TEXT\n", diff.printUnified())
+        assertEquals("@@ -2,4 +2,4 @@\n  is\n- new\n- original\n- text\n+ test\n+ not\n+ TEXT\n", diff.printUnified(1))
+    }
 }
