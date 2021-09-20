@@ -1,3 +1,5 @@
+/* Contains the data for dynamic programming */
+
 data class DPValue(val value: Int = 0, val previous: Pair<Int, Int> = Pair(0, 0))
 
 /* Function calculates an array of dp for LongestCommonSubsequence*/
@@ -25,13 +27,15 @@ fun countLongestCommonSubsequence(firstText: Text, secondText: Text): List<List<
     return dp
 }
 
-/* Function adds changed (added and deleted) lines to list*/
+/* Function adds changed (added and deleted) lines to a given list*/
 
-fun addLines(dText: MutableList<DiffLine>, from: Int, to: Int, type: LineType) {
+private fun addLines(dText: MutableList<DiffLine>, from: Int, to: Int, type: LineType) {
     for (i in from downTo to) {
         dText.add(DiffLine(type))
     }
 }
+
+/* Function restores the LCS by dp data*/
 
 fun buildDiffText(firstText: Text, secondText: Text, dp: List<List<DPValue>>): MutableList<DiffLine> {
     val dText: MutableList<DiffLine> = mutableListOf()
@@ -51,24 +55,29 @@ fun buildDiffText(firstText: Text, secondText: Text, dp: List<List<DPValue>>): M
     } while (indexes != Pair(0, 0)) //(0, 0) base of dp
     dText.reverse()
     sortDiffLines(dText)
-    buildIndexes(dText)
+    countIndexes(dText)
     return dText
 }
 
-fun sortDiffLines(dText: MutableList<DiffLine>) {
+/* Function sorts the data for two types of blocks common lines and changed one.
+*  Changed lines in the block (between two common blocks or ends of the text) first should be deleted and then added*/
+
+private fun sortDiffLines(dText: MutableList<DiffLine>) {
     val sortDText: MutableList<DiffLine> = mutableListOf()
     val added: MutableList<DiffLine> = mutableListOf()
     val deleted: MutableList<DiffLine> = mutableListOf()
+
+    /*Collect all changed lines and add them in the right order (first deleted, then added) between common lines*/
+
     for (i in 0 until dText.size) {
-        if (dText[i].type == LineType.Common) {
-            updateSortDText(sortDText, deleted)
-            updateSortDText(sortDText, added)
-            sortDText.add(dText[i])
-            continue
-        }
         when (dText[i].type) {
             LineType.Add -> added.add(dText[i])
-            else -> deleted.add(dText[i])
+            LineType.Delete -> deleted.add(dText[i])
+            else -> {
+                updateSortDText(sortDText, deleted)
+                updateSortDText(sortDText, added)
+                sortDText.add(dText[i])
+            }
         }
     }
     updateSortDText(sortDText, deleted)
@@ -78,24 +87,26 @@ fun sortDiffLines(dText: MutableList<DiffLine>) {
     }
 }
 
-fun updateSortDText(sortDText: MutableList<DiffLine>, updated: MutableList<DiffLine>) {
+private fun updateSortDText(sortDText: MutableList<DiffLine>, updated: MutableList<DiffLine>) {
     updated.forEach {
         sortDText.add(it)
     }
     updated.clear()
 }
 
-fun buildIndexes(dText: MutableList<DiffLine>) {
+/* Count indexes of lines by their new order*/
+
+private fun countIndexes(dText: MutableList<DiffLine>) {
     var firstIndex = -1
     var secondIndex = -1
     for (i in 0 until dText.size) {
         val line = dText[i]
         when (line.type) {
-            LineType.Delete -> firstIndex += 1
-            LineType.Add -> secondIndex += 1
+            LineType.Delete -> firstIndex++
+            LineType.Add -> secondIndex++
             else -> {
-                firstIndex += 1
-                secondIndex += 1
+                firstIndex++
+                secondIndex++
             }
         }
         dText[i].firstIndex = firstIndex

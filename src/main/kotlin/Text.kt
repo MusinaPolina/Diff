@@ -17,3 +17,5 @@ class Text {
         text = input
     }
 }
+
+typealias Texts = Pair<Text, Text>
