@@ -46,22 +46,22 @@ private fun printDefaultChange(deleted: List<DiffLine>, added: List<DiffLine>, t
 
 /* Return added lines with '>' in the beginning*/
 
-private fun addedLines(added: List<DiffLine>, texts: Pair<Text, Text>): Any {
+private fun addedLines(added: List<DiffLine>, texts: Texts): Any {
     val result = StringBuilder()
     added.forEach {
         result.append("> ")
-        result.appendLine(texts.second.text[it.secondIndex])
+        result.appendLine(texts.second[it.secondIndex])
     }
     return result
 }
 
 /* Return deleted lines with '<' in the beginning*/
 
-private fun deletedLines(deleted: List<DiffLine>, texts: Pair<Text, Text>): Any {
+private fun deletedLines(deleted: List<DiffLine>, texts: Texts): Any {
     val result = StringBuilder()
     deleted.forEach {
         result.append("< ")
-        result.appendLine(texts.first.text[it.firstIndex])
+        result.appendLine(texts.first[it.firstIndex])
     }
     return result
 }

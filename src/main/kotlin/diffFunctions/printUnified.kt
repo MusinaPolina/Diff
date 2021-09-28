@@ -50,8 +50,8 @@ fun printUnifiedBlock(block: MutableList<DiffLine>, texts: Texts): StringBuilder
             else -> "  "
         })
         result.appendLine(when (it.type) {
-            LineType.Add -> texts.second.text[it.secondIndex]
-            else -> texts.first.text[it.firstIndex]
+            LineType.Add -> texts.second[it.secondIndex]
+            else -> texts.first[it.firstIndex]
         })
     }
     return result

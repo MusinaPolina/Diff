@@ -13,7 +13,9 @@ data class DiffLine(var type: LineType, var firstIndex: Int = -1, var secondInde
 
 /* Values and previous position of state of dp to count the longest common subsequence */
 
-class Diff(text1: Text, text2: Text) {
+typealias Texts = Pair<List<String>, List<String>>
+
+class Diff(private val text1: List<String>, private val text2: List<String>) {
     var dText: List<DiffLine> = listOf()
     val texts = Pair(text1, text2)
 
@@ -22,7 +24,7 @@ class Diff(text1: Text, text2: Text) {
     }
 
     private fun longestCommonSubsequence() {
-        dText = buildDiffText(texts.first, texts.second, countLongestCommonSubsequence(texts.first, texts.second))
+        dText = buildDiffText(text1, text2, countLongestCommonSubsequence(text1, text2))
     }
 
     fun printDefault(): String {

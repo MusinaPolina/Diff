@@ -1,8 +1,8 @@
 import java.io.File
 
 fun printDiff(file1: File, file2: File, format: PrintFormat) {
-    val text1 = Text(file1)
-    val text2 = Text(file2)
+    val text1 = file1.readLines()
+    val text2 = file2.readLines()
     val diff = Diff(text1, text2)
     print(when (format) {
         PrintFormat.Unified -> diff.printUnified()
@@ -11,13 +11,13 @@ fun printDiff(file1: File, file2: File, format: PrintFormat) {
 }
 
 fun printHelp() {
-    val text1 = Text(File("src/main/kotlin/text1.txt"))
+   /* val text1 = Text(File("src/main/kotlin/text1.txt"))
     val text2 = Text(File("src/main/kotlin/text2.txt"))
     val diff = Diff(text1, text2)
     println("Default output:")
     println(diff.printDefault())
     println("Unified output:")
-    println(diff.printUnified())
+    println(diff.printUnified())*/
 }
 
 fun printError() {

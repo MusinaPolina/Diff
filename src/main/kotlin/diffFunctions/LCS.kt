@@ -4,16 +4,16 @@ data class DPValue(val value: Int = 0, val previous: Pair<Int, Int> = Pair(0, 0)
 
 /* Function calculates an array of dp for LongestCommonSubsequence*/
 
-fun countLongestCommonSubsequence(firstText: Text, secondText: Text): List<List<DPValue>> {
-    val firstSize = firstText.text.size
-    val secondSize = secondText.text.size
+fun countLongestCommonSubsequence(firstText:List<String>, secondText:List<String>): List<List<DPValue>> {
+    val firstSize = firstText.size
+    val secondSize = secondText.size
     val dp: List<MutableList<DPValue>> = List(firstSize + 1) { MutableList(secondSize + 1) { DPValue() } }
     val firstRange = 1..firstSize
     val secondRange = 1..secondSize
 
     for (first in firstRange) {
         for (second in secondRange) {
-            if (firstText.text[first - 1] == secondText.text[second - 1]) {
+            if (firstText[first - 1] == secondText[second - 1]) {
                 dp[first][second] = DPValue(dp[first - 1][second - 1].value + 1, Pair(first - 1, second - 1))
             } else {
                 dp[first][second] = if (dp[first - 1][second].value > dp[first][second - 1].value) {
@@ -37,15 +37,15 @@ private fun addLines(dText: MutableList<DiffLine>, from: Int, to: Int, type: Lin
 
 /* Function restores the LCS by dp data*/
 
-fun buildDiffText(firstText: Text, secondText: Text, dp: List<List<DPValue>>): MutableList<DiffLine> {
+fun buildDiffText(firstText:List<String>, secondText:List<String>, dp: List<List<DPValue>>): MutableList<DiffLine> {
     val dText: MutableList<DiffLine> = mutableListOf()
-    var indexes = Pair(firstText.text.size, secondText.text.size)
+    var indexes = Pair(firstText.size, secondText.size)
     do {
         val previous = dp[indexes.first][indexes.second].previous
         var (first, second) = indexes
         first -= 1
         second -= 1
-        if (first != -1 && second != -1 && firstText.text[first] == secondText.text[second]) {
+        if (first != -1 && second != -1 && firstText[first] == secondText[second]) {
             dText.add(DiffLine(LineType.Common))
         } else {
             addLines(dText, second, previous.second, LineType.Add)
