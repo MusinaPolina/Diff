@@ -56,7 +56,7 @@ fun parseHelp(input: String?): Input {
 }
 
 fun getInput(): List<String?> {
-    println("Введите ссылки на два текста, посмотреть примеры введите h")
+    println("Enter links to the two texts you want to compare:\nPrint 'help' for examples")
     val input: MutableList<String?> = mutableListOf()
     for (i in 1..3) {
         input.add(readLine())
