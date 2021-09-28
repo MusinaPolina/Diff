@@ -1,13 +1,13 @@
 import java.io.File
 
-enum class InputType {
+enum class QueryInput {
     Help, Links, Error
 }
 
-data class Input(val type: InputType = InputType.Error,
+data class Input(val type: QueryInput = QueryInput.Error,
                  val format: PrintFormat = PrintFormat.Unified,
-                 val link1: String = "",
-                 val link2: String = "")
+                 val link1: File = File(""),
+                 val link2: File = File(""))
 
 fun parseInput(input: List<String?>): Input {
     return when (input.size) {
@@ -33,10 +33,12 @@ fun inputFormat(format: String?): PrintFormat? {
 fun parseLinksFormat(link1: String?, link2: String?, format: String?): Input {
     val printFormat = inputFormat(format)
     if (link1 != null && link2 != null && printFormat != null) {
-        if (!File(link1).exists() || !File(link2).exists()) {
+        val file1 = File(link1)
+        val file2 = File(link2)
+        if (!file1.exists() || !file2.exists()) {
             return wrongInput()
         }
-        return Input(InputType.Links, printFormat, link1, link2)
+        return Input(QueryInput.Links, printFormat, file1, file2)
     } else {
         return wrongInput()
     }
@@ -48,7 +50,7 @@ fun parseLinks(link1: String?, link2: String?): Input {
 
 fun parseHelp(input: String?): Input {
     return when (input) {
-        "help" -> Input(InputType.Help)
+        "help" -> Input(QueryInput.Help)
         else -> wrongInput()
     }
 }
@@ -58,6 +60,9 @@ fun getInput(): List<String?> {
     val input: MutableList<String?> = mutableListOf()
     for (i in 1..3) {
         input.add(readLine())
+    }
+    while (input.isNotEmpty() && input[input.lastIndex].isNullOrEmpty()) {
+        input.removeLast()
     }
     return input
 }
