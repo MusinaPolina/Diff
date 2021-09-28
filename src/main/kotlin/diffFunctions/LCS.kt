@@ -11,15 +11,15 @@ fun countLongestCommonSubsequence(firstText: Text, secondText: Text): List<List<
     val firstRange = 1..firstSize
     val secondRange = 1..secondSize
 
-    for (i in firstRange) {
-        for (j in secondRange) {
-            if (firstText.text[i - 1] == secondText.text[j - 1]) {
-                dp[i][j] = DPValue(dp[i - 1][j - 1].value + 1, Pair(i - 1, j - 1))
+    for (first in firstRange) {
+        for (second in secondRange) {
+            if (firstText.text[first - 1] == secondText.text[second - 1]) {
+                dp[first][second] = DPValue(dp[first - 1][second - 1].value + 1, Pair(first - 1, second - 1))
             } else {
-                dp[i][j] = if (dp[i - 1][j].value > dp[i][j - 1].value) {
-                    DPValue(dp[i - 1][j].value, Pair(i - 1, j))
+                dp[first][second] = if (dp[first - 1][second].value > dp[first][second - 1].value) {
+                    DPValue(dp[first - 1][second].value, Pair(first - 1, second))
                 } else {
-                    DPValue(dp[i][j - 1].value, Pair(i, j - 1))
+                    DPValue(dp[first][second - 1].value, Pair(first, second - 1))
                 }
             }
         }

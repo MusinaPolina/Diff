@@ -70,14 +70,11 @@ private fun deletedLines(deleted: List<DiffLine>, texts: Pair<Text, Text>): Any 
 
 private fun printDefaultBlock(lst: List<DiffLine>, texts: Texts): StringBuilder {
     val (added, deleted) = lst.partition { it.type == LineType.Add }
-    return if (added.isNotEmpty() && deleted.isNotEmpty()) {
-        printDefaultChange(deleted, added, texts)
-    } else if (added.isNotEmpty()) {
-        printDefaultAdded(added, texts)
-    } else if (deleted.isNotEmpty()) {
-        printDefaultDeleted(deleted, texts)
-    } else {
-        return StringBuilder()
+    return when {
+        added.isNotEmpty() && deleted.isNotEmpty() -> printDefaultChange(deleted, added, texts)
+        added.isNotEmpty() -> printDefaultAdded(added, texts)
+        deleted.isNotEmpty() -> printDefaultDeleted(deleted, texts)
+        else -> StringBuilder()
     }
 }
 
