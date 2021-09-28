@@ -57,6 +57,8 @@ fun printUnifiedBlock(block: MutableList<DiffLine>, texts: Texts): StringBuilder
     return result
 }
 
+/* Return a string. It contains all output (equal to the unified one)*/
+
 fun printUnified(diff: List<DiffLine>, texts: Texts, border: Int = 3): String {
     val result = StringBuilder()
     val printed: List<Boolean> = printedLines(diff, border)

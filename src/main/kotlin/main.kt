@@ -1,18 +1,22 @@
 import java.io.File
 
-fun printLinks(file1: File, file2: File, format: PrintFormat) {
+/* Prints diff in given format, read files by given links*/
+
+fun printByLinks(file1: File, file2: File, format: PrintFormat) {
     val text1 = file1.readLines()
     val text2 = file2.readLines()
-    print(printDiff(text1, text2, format))
+    print(countDiff(text1, text2, format))
 }
+
+/* Prints an example of diff formats*/
 
 fun printHelp() {
     val file1 = File("src/main/kotlin/text1.txt")
     val file2 = File("src/main/kotlin/text2.txt")
-    println("Default output:")
-    printLinks(file1, file2, PrintFormat.Default)
-    println("Unified output:")
-    printLinks(file1, file2, PrintFormat.Unified)
+    println("Default output, print 'd' after links:")
+    printByLinks(file1, file2, PrintFormat.Default)
+    println("Unified output, print 'u' after links:")
+    printByLinks(file1, file2, PrintFormat.Unified)
 }
 
 fun printError() {
@@ -21,7 +25,7 @@ fun printError() {
 
 fun printInput(input: Input) {
     when (input.type) {
-        QueryInput.Links -> printLinks(input.link1, input.link2, input.format)
+        QueryInput.Links -> printByLinks(input.link1, input.link2, input.format)
         QueryInput.Help -> printHelp()
         else -> printError()
     }

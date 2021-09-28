@@ -11,11 +11,11 @@ enum class PrintFormat {
 
 data class DiffLine(var type: LineType, var firstIndex: Int = -1, var secondIndex: Int = -1)
 
-/* Values and previous position of state of dp to count the longest common subsequence */
-
 typealias Texts = Pair<List<String>, List<String>>
 
-fun printDiff(text1: List<String>, text2: List<String>, format: PrintFormat): String {
+/* Calculates a value of LCS and return the string of Diff in given format*/
+
+fun countDiff(text1: List<String>, text2: List<String>, format: PrintFormat): String {
     val diff = buildDiffText(text1, text2, countLongestCommonSubsequence(text1, text2))
     val texts = Pair(text1, text2)
     return (when (format) {

@@ -1,9 +1,10 @@
 import java.io.File
 
+/* Contains a type of input */
+
 enum class QueryInput {
     Help, Links, Error
 }
-
 data class Input(val type: QueryInput = QueryInput.Error,
                  val format: PrintFormat = PrintFormat.Unified,
                  val link1: File = File(""),
@@ -30,6 +31,8 @@ fun inputFormat(format: String?): PrintFormat? {
     }
 }
 
+/* Checks that given links are correct*/
+
 fun parseLinksFormat(link1: String?, link2: String?, format: String?): Input {
     val printFormat = inputFormat(format)
     if (link1 != null && link2 != null && printFormat != null) {
@@ -55,14 +58,17 @@ fun parseHelp(input: String?): Input {
     }
 }
 
+/* In case of empty arguments of command line looks for keypad input*/
+
 fun getInput(): List<String?> {
-    println("Enter links to the two texts you want to compare:\nPrint 'help' for examples")
+    println("Print 'help' for examples\nEnter links to the two texts you want to compare:")
     val input: MutableList<String?> = mutableListOf()
     for (i in 1..3) {
-        input.add(readLine())
-    }
-    while (input.isNotEmpty() && input[input.lastIndex].isNullOrEmpty()) {
-        input.removeLast()
+        val line = readLine()
+        input.add(line)
+        if (line == "help") {
+            break // supposed that user wants to get help
+        }
     }
     return input
 }
