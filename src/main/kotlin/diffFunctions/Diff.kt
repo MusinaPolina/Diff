@@ -2,6 +2,10 @@ enum class LineType(val value: Char){
     Add('a'), Delete('d'), Common('c')
 }
 
+enum class PrintFormat {
+    Default, Unified
+}
+
 /*  Category of line in text: it has been added, deleted or remained the same
     and its index in both texts (-1 in case it's absent) */
 
