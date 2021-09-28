@@ -57,21 +57,20 @@ fun printUnifiedBlock(block: MutableList<DiffLine>, texts: Texts): StringBuilder
     return result
 }
 
-fun printUnified(text: Diff, border: Int = 3): String {
+fun printUnified(diff: List<DiffLine>, texts: Texts, border: Int = 3): String {
     val result = StringBuilder()
-    val dText = text.dText
-    val printed: List<Boolean> = printedLines(dText, border)
+    val printed: List<Boolean> = printedLines(diff, border)
     val block: MutableList<DiffLine> = mutableListOf()  /* Contain lines that should be printed
                                                                Changed lines are separated by unprinted ones*/
-    for (i in dText.indices) {
+    for (i in diff.indices) {
         if (!printed[i]) {
-            result.append(printUnifiedBlock(block, text.texts))
+            result.append(printUnifiedBlock(block, texts))
             block.clear()
         } else {
-            block.add(dText[i])
+            block.add(diff[i])
         }
     }
-    result.append(printUnifiedBlock(block, text.texts))
+    result.append(printUnifiedBlock(block, texts))
     return result.toString()
 }
 

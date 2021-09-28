@@ -1,23 +1,18 @@
 import java.io.File
 
-fun printDiff(file1: File, file2: File, format: PrintFormat) {
+fun printLinks(file1: File, file2: File, format: PrintFormat) {
     val text1 = file1.readLines()
     val text2 = file2.readLines()
-    val diff = Diff(text1, text2)
-    print(when (format) {
-        PrintFormat.Unified -> diff.printUnified()
-        PrintFormat.Default -> diff.printDefault()
-    })
+    print(printDiff(text1, text2, format))
 }
 
 fun printHelp() {
-   /* val text1 = Text(File("src/main/kotlin/text1.txt"))
-    val text2 = Text(File("src/main/kotlin/text2.txt"))
-    val diff = Diff(text1, text2)
+    val file1 = File("src/main/kotlin/text1.txt")
+    val file2 = File("src/main/kotlin/text2.txt")
     println("Default output:")
-    println(diff.printDefault())
+    printLinks(file1, file2, PrintFormat.Default)
     println("Unified output:")
-    println(diff.printUnified())*/
+    printLinks(file1, file2, PrintFormat.Unified)
 }
 
 fun printError() {
@@ -26,7 +21,7 @@ fun printError() {
 
 fun printInput(input: Input) {
     when (input.type) {
-        QueryInput.Links -> printDiff(input.link1, input.link2, input.format)
+        QueryInput.Links -> printLinks(input.link1, input.link2, input.format)
         QueryInput.Help -> printHelp()
         else -> printError()
     }

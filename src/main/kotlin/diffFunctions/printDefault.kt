@@ -80,19 +80,19 @@ private fun printDefaultBlock(lst: List<DiffLine>, texts: Texts): StringBuilder 
 
 /* Return a string. It contains all output (equal to the default one)*/
 
-fun printDefault(text: Diff): StringBuilder {
+fun printDefault(diff: List<DiffLine>, texts: Texts): StringBuilder {
     val result = StringBuilder()
     val block: MutableList<DiffLine> = mutableListOf()  /* Contains added and deleted lines that should be printed
                                                             Changed lines are separated by common ones*/
-    for (i in 0 until text.dText.size) {
-        when (text.dText[i].type) {
+    for (i in diff.indices) {
+        when (diff[i].type) {
             LineType.Common -> {
-                result.append(printDefaultBlock(block, text.texts))
+                result.append(printDefaultBlock(block, texts))
                 block.clear()
             }
-            else -> block.add(text.dText[i])
+            else -> block.add(diff[i])
         }
     }
-    result.append(printDefaultBlock(block, text.texts))
+    result.append(printDefaultBlock(block, texts))
     return result
 }

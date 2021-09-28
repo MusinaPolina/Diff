@@ -15,23 +15,11 @@ data class DiffLine(var type: LineType, var firstIndex: Int = -1, var secondInde
 
 typealias Texts = Pair<List<String>, List<String>>
 
-class Diff(private val text1: List<String>, private val text2: List<String>) {
-    var dText: List<DiffLine> = listOf()
+fun printDiff(text1: List<String>, text2: List<String>, format: PrintFormat): String {
+    val diff = buildDiffText(text1, text2, countLongestCommonSubsequence(text1, text2))
     val texts = Pair(text1, text2)
-
-    init {
-        longestCommonSubsequence()
-    }
-
-    private fun longestCommonSubsequence() {
-        dText = buildDiffText(text1, text2, countLongestCommonSubsequence(text1, text2))
-    }
-
-    fun printDefault(): String {
-        return printDefault(this).toString()
-    }
-
-    fun printUnified(border: Int = 3): String {
-        return printUnified(this, border)
-    }
+    return (when (format) {
+        PrintFormat.Unified -> printUnified(diff, texts)
+        PrintFormat.Default -> printDefault(diff, texts)
+    }).toString()
 }
