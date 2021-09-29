@@ -3,7 +3,7 @@ enum class LineType(val value: Char){
 }
 
 enum class PrintFormat {
-    Default, Unified
+    Original, Unified
 }
 
 /*  Category of line in text: it has been added, deleted or remained the same
@@ -20,6 +20,6 @@ fun countDiff(text1: List<String>, text2: List<String>, format: PrintFormat): St
     val texts = Pair(text1, text2)
     return (when (format) {
         PrintFormat.Unified -> printUnified(diff, texts)
-        PrintFormat.Default -> printDefault(diff, texts)
+        PrintFormat.Original -> printOriginal(diff, texts)
     }).toString()
 }

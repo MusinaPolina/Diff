@@ -21,22 +21,22 @@ fun descriptionLine(deleted: List<DiffLine>, added: List<DiffLine>, plus: LineTy
     return result
 }
 
-/* printDefault{type of change} functions return output format for the whole block of lines
+/* printOriginal{type of change} functions return output format for the whole block of lines
     (description + change lines)*/
 
-private fun printDefaultAdded(added: List<DiffLine>, texts: Texts): StringBuilder {
+private fun printOriginalAdded(added: List<DiffLine>, texts: Texts): StringBuilder {
     val result: StringBuilder = descriptionLine(added, added, LineType.Add)
     result.append(addedLines(added, texts))
     return result
 }
 
-private fun printDefaultDeleted(deleted: List<DiffLine>, texts: Texts): StringBuilder {
+private fun printOriginalDeleted(deleted: List<DiffLine>, texts: Texts): StringBuilder {
     val result: StringBuilder = descriptionLine(deleted, deleted, LineType.Delete)
     result.append(deletedLines(deleted, texts))
     return result
 }
 
-private fun printDefaultChange(deleted: List<DiffLine>, added: List<DiffLine>, texts: Texts): StringBuilder {
+private fun printOriginalChange(deleted: List<DiffLine>, added: List<DiffLine>, texts: Texts): StringBuilder {
     val result: StringBuilder = descriptionLine(deleted, added, LineType.Common) 
     result.append(deletedLines(deleted, texts))
     result.appendLine("---")
@@ -68,31 +68,31 @@ private fun deletedLines(deleted: List<DiffLine>, texts: Texts): Any {
 
 /* Return lines in one of the possible formats: added lines, deleted lines and changed one*/
 
-private fun printDefaultBlock(lst: List<DiffLine>, texts: Texts): StringBuilder {
+private fun printOriginalBlock(lst: List<DiffLine>, texts: Texts): StringBuilder {
     val (added, deleted) = lst.partition { it.type == LineType.Add }
     return when {
-        added.isNotEmpty() && deleted.isNotEmpty() -> printDefaultChange(deleted, added, texts)
-        added.isNotEmpty() -> printDefaultAdded(added, texts)
-        deleted.isNotEmpty() -> printDefaultDeleted(deleted, texts)
+        added.isNotEmpty() && deleted.isNotEmpty() -> printOriginalChange(deleted, added, texts)
+        added.isNotEmpty() -> printOriginalAdded(added, texts)
+        deleted.isNotEmpty() -> printOriginalDeleted(deleted, texts)
         else -> StringBuilder()
     }
 }
 
-/* Return a string. It contains all output (equal to the default one)*/
+/* Return a string. It contains all output (equal to the Original one)*/
 
-fun printDefault(diff: List<DiffLine>, texts: Texts): StringBuilder {
+fun printOriginal(diff: List<DiffLine>, texts: Texts): StringBuilder {
     val result = StringBuilder()
     val block: MutableList<DiffLine> = mutableListOf()  /* Contains added and deleted lines that should be printed
                                                             Changed lines are separated by common ones*/
     for (i in diff.indices) {
         when (diff[i].type) {
             LineType.Common -> {
-                result.append(printDefaultBlock(block, texts))
+                result.append(printOriginalBlock(block, texts))
                 block.clear()
             }
             else -> block.add(diff[i])
         }
     }
-    result.append(printDefaultBlock(block, texts))
+    result.append(printOriginalBlock(block, texts))
     return result
 }

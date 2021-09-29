@@ -25,7 +25,7 @@ fun wrongInput(): Input {
 
 fun inputFormat(format: String?): PrintFormat? {
     return when (format) {
-        "d" -> PrintFormat.Default
+        "r" -> PrintFormat.Original
         "u" -> PrintFormat.Unified
         else -> null
     }

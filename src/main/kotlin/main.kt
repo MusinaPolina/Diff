@@ -13,8 +13,8 @@ fun printByLinks(file1: File, file2: File, format: PrintFormat) {
 fun printHelp() {
     val file1 = File("src/main/kotlin/text1.txt")
     val file2 = File("src/main/kotlin/text2.txt")
-    println("Default output, print 'd' after links:")
-    printByLinks(file1, file2, PrintFormat.Default)
+    println("Default output, print 'r' after links:")
+    printByLinks(file1, file2, PrintFormat.Original)
     println("Unified output, print 'u' after links:")
     printByLinks(file1, file2, PrintFormat.Unified)
 }
