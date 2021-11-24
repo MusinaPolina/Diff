@@ -1,6 +1,6 @@
 #  Basics of programming course: the utility diff
 
-Realization of the utility diff (https://ru.wikipedia.org/wiki/Diff)
+Realization of the utility diff (https://wikipedia.org/wiki/Diff)
 
 ##Usage
 Input is possible both from the keyboard and from the console
